@@ -3,11 +3,8 @@
 #
 #telebot store Ivan Deus
 from flask import Flask, request, jsonify, render_template, redirect, url_for, make_response, abort
-import user_agents
 import json
-import re
 import time
-from passlib.hash import pbkdf2_sha256
 import telebot
 from telebot import types
 #### BEGINNING ###
@@ -30,6 +27,33 @@ def connect_to_mysql():
     except pymysql.err.OperationalError as err:
         print(f"Error connecting to MySQL server: {err}")
         return None 
+# Function to add or update a user in the 'telebot_users' table
+def add_or_update_user(chat_id, name, message, conn, first_name, last_name):
+    try:
+        with conn.cursor() as cursor:
+            # Convert chat_id to a string and then escape it to prevent SQL injection
+            chat_id_str = conn.escape_string(str(chat_id))
+            name = conn.escape_string(name)
+            message = conn.escape_string(message)
+            first_name = conn.escape_string(first_name)
+            last_name = conn.escape_string(last_name)
+            # Check if the user already exists in the table
+            query = f"SELECT * FROM telebot_users WHERE chat_id = '{chat_id_str}'"
+            cursor.execute(query)
+            if cursor.rowcount > 0:
+                # User exists, update the record
+                update_query = f"UPDATE telebot_users SET lastmsg = '{message}' WHERE chat_id = '{chat_id_str}'"
+                cursor.execute(update_query)
+            else:
+                # User does not exist, insert a new record
+                insert_query = f"INSERT INTO telebot_users (chat_id, name, lastmsg, first_name, last_name, Sub) VALUES ('{chat_id_str}', '{name}', '{message}', '{first_name}', '{last_name}', 1)"
+                cursor.execute(insert_query)
+            # Commit the changes to the database
+            conn.commit()
+    except pymysql.Error as e:
+        # Handle any database errors here
+        print(f"Database error: {e}")
+
 
 
 ##########
@@ -38,13 +62,10 @@ def connect_to_mysql():
 def telebothook1x():
     try:
         conn = connect_to_mysql()
-        telebot_vars = fetch_telebot_vars_into_dict(conn)
         #V2 Get update array
         json_string = request.get_data().decode('UTF-8')
         update = telebot.types.Update.de_json(json_string)
         bot = telebot.TeleBot(telebot_vars['main_bot_token'])
-        keys_welcome = inline_button_constructor(f"{telebot_vars['welcome_keys']}, /categories")
-        keys_start = inline_button_constructor((get_prods_category(conn)))
         # Access name and chat_id only when there is a message
         if (update.message is not None) and (update.message.text is not None):
             message = update.message
@@ -59,37 +80,22 @@ def telebothook1x():
             else:
                 last_name = ' '
             chat_id = message.chat.id
+            keys_start = "Gen QRcode, /qr, Help, /help"
             # add user to database
             add_or_update_user(chat_id, name, message.text, conn, first_name, last_name)
             if message.text == '/start':
-                # let us begin
-                try:
-                    with open(script_directory+'/static/' + telebot_vars['welcome_banner'], 'rb') as photo:
-                        bot.send_photo(chat_id, photo)
-                except FileNotFoundError:
-                    print ("No welcome banner")
                 #just send a start message
-                bot.send_message(chat_id, telebot_vars['welcome_message'], reply_markup=keys_start, parse_mode='html')
+                bot.send_message(chat_id, "QR code generator", reply_markup=keys_start, parse_mode='html')
             else:
-                bot.send_message(chat_id, telebot_vars['welcome_nostart'], reply_markup=keys_welcome, parse_mode='html')
+                bot.send_message(chat_id, "Sorry, I don't understand", reply_markup=keys_start, parse_mode='html')
         # do call backs         
         elif update.callback_query is not None:
             calld = update.callback_query.data
             chat_id = update.callback_query.message.chat.id
-            if calld == '/categories':
-                bot.send_message(chat_id, telebot_vars['welcome_message'], reply_markup=keys_start, parse_mode='html')
-            elif calld.startswith("https_"):
-                prodidx = re.sub(r'https_', '', calld)
-                order_placed = order_placed_in_store(conn, chat_id, prodidx)
-                if order_placed:
-                    bot.send_message(chat_id, telebot_vars['buy_text'] + order_placed, reply_markup=keys_welcome, parse_mode='html')
-            else:
-                products = get_prods_for_category(conn, calld)
-                for product in products:
-                    with open(script_directory+'/static/' + product[2], 'rb') as photo:
-                        bot.send_photo(chat_id, photo, caption=product[1])
-                    keys_prod = inline_button_constructor(f"{telebot_vars['buy_button']}, https_{product[0]}, {telebot_vars['welcome_keys']}, /categories")
-                    bot.send_message(chat_id, product[3], reply_markup=keys_prod, parse_mode='html')        
+            if calld == '/qr':
+                bot.send_message(chat_id, "Type URL", reply_markup=keys_start, parse_mode='html')
+            elif calld.startswith("https"):
+                bot.send_message(chat_id, "Type title", reply_markup=keys_start, parse_mode='html')
     finally:
         # Close the database connection
         if conn:
