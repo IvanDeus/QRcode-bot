@@ -1,0 +1,4 @@
+# ignore config file for security
+QRcodebot_cfg.py
+__app.py
+__pycache__/
