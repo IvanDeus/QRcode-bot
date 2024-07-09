@@ -19,12 +19,12 @@ if action == "start":
         print ("Bot is already running.")
     else:
         psutil.Popen(
-        ["gunicorn", 
-         "-b", "localhost:{}".format(bot_lport), 
-         "-w", "4", 
-         "-t", "222", 
-         "--log-file={}".format(logfpath), 
-         "telebot_store:app", 
+        ["gunicorn",
+         "-b", "localhost:{}".format(bot_lport),
+         "-w", "4",
+         "-t", "180",
+         "--log-file={}".format(logfpath),
+         "QRcodebot:app",
          "--chdir", script_directory]
         )
         print("Bot started.")
