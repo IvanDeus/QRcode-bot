@@ -80,7 +80,7 @@ def telebothook1x():
             else:
                 last_name = ' '
             chat_id = message.chat.id
-            keys_start = "Gen QRcode, /qr, Help, /help"
+            keys_start = "(Gen QRcode, /qr, Help, /help)"
             # add user to database
             add_or_update_user(chat_id, name, message.text, conn, first_name, last_name)
             if message.text == '/start':
@@ -88,7 +88,7 @@ def telebothook1x():
                 bot.send_message(chat_id, "QR code generator", reply_markup=keys_start, parse_mode='html')
             else:
                 bot.send_message(chat_id, "Sorry, I don't understand", reply_markup=keys_start, parse_mode='html')
-        # do call backs         
+        # do call backs   
         elif update.callback_query is not None:
             calld = update.callback_query.data
             chat_id = update.callback_query.message.chat.id
