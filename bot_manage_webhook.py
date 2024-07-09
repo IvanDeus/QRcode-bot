@@ -16,10 +16,7 @@ def set_telegram_webhook(token, url, max_connections=28, drop_pending_updates=Tr
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Set Telegram webhook.')
-    parser.add_argument('token', type=str, help='Telegram bot token')
     parser.add_argument('url', type=str, help='Webhook URL')
-    
     args = parser.parse_args()
-
-    response = set_telegram_webhook(args.token, args.url)
+    response = set_telegram_webhook(main_bot_token, args.url)
     print(response)
