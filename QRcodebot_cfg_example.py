@@ -17,3 +17,5 @@ smtp_port = 25
 #paths
 install_path = "/var/www"
 logfpath = "/var/log/QRbot_.log"
+# bot
+main_bot_token = "xxx"
