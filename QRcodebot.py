@@ -65,7 +65,7 @@ def telebothook1x():
         #V2 Get update array
         json_string = request.get_data().decode('UTF-8')
         update = telebot.types.Update.de_json(json_string)
-        bot = telebot.TeleBot(telebot_vars['main_bot_token'])
+        bot = telebot.TeleBot(main_bot_token)
         # Access name and chat_id only when there is a message
         if (update.message is not None) and (update.message.text is not None):
             message = update.message
