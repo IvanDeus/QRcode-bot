@@ -13,6 +13,58 @@ import os
 script_directory = os.path.dirname(os.path.abspath(__file__))
 # Config import
 from QRcodebot_cfg import *
+#QR import
+import qrcode
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.colors import HexColor
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
+#QR gen
+def generate_qr_code_with_pdf(url, output_image_file, output_pdf_file, caption):
+    """
+    Generates a QR code for a given URL, saves it as a PNG file, and creates an A4 PDF file
+    with a caption above the QR code.
+    """
+    output_image_file = script_directory +'/static/'+ output_image_file
+    output_pdf_file = script_directory +'/static/'+ output_pdf_file
+    # Create QR code instance
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+  
+    # Add data to the QR code
+    qr.add_data(url)
+    qr.make(fit=True)
+    # Create an image from the QR Code instance
+    img = qr.make_image(fill_color="black", back_color="white")
+    # Save the image
+    img.save(output_image_file)
+    # Create PDF
+    c = canvas.Canvas(output_pdf_file, pagesize=A4)
+    # Set up dimensions
+    width, height = A4
+    # Set caption font size and center alignment
+    #pdfmetrics.registerFont(TTFont('Helvetica Cyrillic', script_directory+'/static/'+'Helvetica Cyrillic.ttf'))
+    pdfmetrics.registerFont(TTFont('DejaVuSans', script_directory+'/static/'+'DejaVuSans.ttf'))
+    caption_font_size = 36
+    c.setFont("DejaVuSans", caption_font_size)
+    c.setFillColor(HexColor("#800080"))  # Deep purple color
+    caption_width = c.stringWidth(caption, "DejaVuSans", caption_font_size)
+    # Add caption Positions center h and x inches below the top of the page.
+    c.drawString((width - caption_width) / 2, height - 1.6*inch, caption)
+    # Add QR code image
+    qr_code_size = 6*inch  # Increase the size of the QR code
+    c.drawImage(output_image_file, (width - qr_code_size) / 2, height - 8*inch, qr_code_size, qr_code_size)
+    # Save the PDF
+    c.showPage()
+    c.save()
+
+
 # start web service
 app = Flask(__name__)
 UPLOAD_FOLDER = 'static'
