@@ -133,7 +133,21 @@ def set_level_for_user(conn, chat_id, level):
     except pymysql.Error as e:
         # Handle any database errors here
         print(f"Database error: {e}")
-        
+#get user level to process queue        
+def get_level_for_user(conn, chat_id):
+    try:
+        result = None
+        with conn.cursor() as cursor:
+            # update user the record
+            s_query = f"SELECT level FROM telebot_users WHERE chat_id = '{chat_id_str}' limit 1"
+            cursor.execute(s_query)
+            result = cursor.fetchone()
+            conn.commit()
+        return result
+    except pymysql.Error as e:
+        # Handle any database errors here
+        print(f"Database error: {e}")
+       
 # cunstruct keyboard sets for a user message
 def inline_button_constructor(my_tuple):
     my_tuple = tuple(my_tuple.split(', '))
@@ -177,13 +191,16 @@ def telebothook1x():
 
             # add user to database
             add_or_update_user(chat_id, name, message.text, conn, first_name, last_name)
+            # get user level 
+            user_level = get_level_for_user(conn, chat_id)
             if message.text == '/start':
                 #just send a start message
                 bot.send_message(chat_id, telebot_vars['welcome_message'], reply_markup=keys_start, parse_mode='html')
                 
             # get and store url     
             elif message.text.startswith("http"):
-                bot.send_message(chat_id, telebot_vars['titul_text'], reply_markup=keys_start, parse_mode='html')
+                bot.send_message(chat_id, telebot_vars['titul_text'], parse_mode='html')
+                set_level_for_user(conn, chat_id, 2)
                 
             #QR code generator
             elif message.text == '/start2qr':
