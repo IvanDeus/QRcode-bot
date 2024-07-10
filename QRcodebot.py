@@ -166,6 +166,18 @@ def telebothook1x():
             if message.text == '/start':
                 #just send a start message
                 bot.send_message(chat_id, telebot_vars['welcome_message'], reply_markup=keys_start, parse_mode='html')
+            # get and store url     
+            elif calld.startswith("https"):
+                bot.send_message(chat_id, telebot_vars['titul_text'], reply_markup=keys_start, parse_mode='html')
+            #QR code generator
+            elif message.text == '/start2qr':
+                my_tuple = tuple(message.text.split(' '))
+                if len(my_tuple) > 2:
+                    bot.send_message(chat_id, "Generation QR code for...\n" + my_tuple[1] )
+                    caption = ' '.join(my_tuple[2:])  # Join all parts after the URL as the caption
+                    generate_qr_code_with_pdf(my_tuple[1], "qrcode1.png", "qrcode1.pdf", caption)
+                    with open(script_directory+'/static/qrcode1.pdf', 'rb') as pdf_file:
+                        bot.send_document(chat_id, pdf_file)                  
             else:
                 bot.send_message(chat_id, telebot_vars['welcome_nostart'], reply_markup=keys_start, parse_mode='html')
         # do call backs   
@@ -173,9 +185,7 @@ def telebothook1x():
             calld = update.callback_query.data
             chat_id = update.callback_query.message.chat.id
             if calld == '/qr':
-                bot.send_message(chat_id, telebot_vars['url_text'], reply_markup=keys_start, parse_mode='html')
-            elif calld.startswith("https"):
-                bot.send_message(chat_id, telebot_vars['titul_text'], reply_markup=keys_start, parse_mode='html')
+                bot.send_message(chat_id, telebot_vars['url_text'], reply_markup=keys_start, parse_mode='html')     
     finally:
         # Close the database connection
         if conn:
