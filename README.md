@@ -17,15 +17,14 @@ This guide will walk you through setting up your Telegram bot, which generates a
    mysql < QRcodebot_cfg.sql
    ```
 3. **Configure Credentials**: Copy `QRcodebot_cfg_example.py` to `QRcodebot_cfg.py` and insert your credentials.
-4. 
-5. **Set Telegram Webhook**: Run the following command to set the Telegram Webhook:
+4. **Set Telegram Webhook**: Run the following command to set the Telegram Webhook:
    ```sh
    python bot_manage_webhook.py
    ```
    (It is recommended to use Nginx for proxying bot traffic).
    
-6. **Start the Bot**: Execute the following command to run your bot:
+5. **Start the Bot**: Execute the following command to run your bot:
    ```sh
    python run-my-bot.py start
    ```
-7. **Begin Usage**: Your bot is now ready to use!
+6. **Begin Usage**: Your bot is now ready to use!
