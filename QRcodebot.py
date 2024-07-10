@@ -1,6 +1,5 @@
 # QR code generator by Ivan Deus for Telegram
 #
-#
 #telebot store Ivan Deus
 from flask import Flask, request, jsonify, render_template, redirect, url_for, make_response, abort
 import json
@@ -125,43 +124,48 @@ def add_or_update_user(chat_id, name, message, conn, first_name, last_name):
     except pymysql.Error as e:
         # Handle any database errors here
         print(f"Database error: {e}")
-#set user URL to process queue        
-def set_url_for_user(conn, chat_id, level):
+import pymysql
+# Set user URL to process queue
+def set_url_for_user(conn, chat_id, u_url):
     try:
         with conn.cursor() as cursor:
-            # update user the record
-            update_query = f"UPDATE telebot_users SET u_url = '{level}' WHERE chat_id = '{chat_id}'"
-            cursor.execute(update_query)
+            # Use parameterized query to prevent SQL injection
+            update_query = "UPDATE telebot_users SET u_url = %s WHERE chat_id = %s"
+            cursor.execute(update_query, (u_url, chat_id))
             conn.commit()
     except pymysql.Error as e:
         # Handle any database errors here
-        print(f"Database error: {e}")        
-#set user level to process queue        
+        print(f"Database error: {e}")
+    finally:
+        cursor.close()
+# Set user level to process queue
 def set_level_for_user(conn, chat_id, level):
     try:
         with conn.cursor() as cursor:
-            # update user the record
-            update_query = f"UPDATE telebot_users SET level = {level} WHERE chat_id = '{chat_id}'"
-            cursor.execute(update_query)
+            # Use parameterized query to prevent SQL injection
+            update_query = "UPDATE telebot_users SET level = %s WHERE chat_id = %s"
+            cursor.execute(update_query, (level, chat_id))
             conn.commit()
     except pymysql.Error as e:
         # Handle any database errors here
         print(f"Database error: {e}")
-#get user level to process queue        
+    finally:
+        cursor.close()
+# Get user level to process queue
 def get_level_for_user(conn, chat_id):
     try:
-        result = None
         with conn.cursor() as cursor:
-            # update user the record
-            s_query = f"SELECT level,lastmsg,u_url FROM telebot_users WHERE chat_id = '{chat_id}' limit 1"
-            cursor.execute(s_query)
+            # Use parameterized query to prevent SQL injection
+            select_query = "SELECT level, lastmsg, u_url FROM telebot_users WHERE chat_id = %s LIMIT 1"
+            cursor.execute(select_query, (chat_id,))
             result = cursor.fetchone()
             conn.commit()
-        return result
+            return result
     except pymysql.Error as e:
         # Handle any database errors here
         print(f"Database error: {e}")
-       
+    finally:
+        cursor.close()      
 # cunstruct keyboard sets for a user message
 def inline_button_constructor(my_tuple):
     my_tuple = tuple(my_tuple.split(', '))
@@ -174,7 +178,6 @@ def inline_button_constructor(my_tuple):
         )
     keys.add(*buttons)
     return keys
-
 ##########
 # Main bot logic
 @app.route('/webhook', methods=['POST'])
@@ -202,7 +205,6 @@ def telebothook1x():
             else:
                 last_name = ' '
             chat_id = message.chat.id
-
             # add user to database
             add_or_update_user(chat_id, name, message.text, conn, first_name, last_name)
             # get user level 
@@ -210,9 +212,8 @@ def telebothook1x():
             if message.text == '/start':
                 #just send a start message
                 bot.send_message(chat_id, telebot_vars['welcome_message'], reply_markup=keys_start, parse_mode='html')
-                
             # get and store url     
-            elif message.text.startswith("http"):
+            elif message.text.startswith("http") and user_level[0] == 1:
                 bot.send_message(chat_id, telebot_vars['titul_text'], parse_mode='html')
                 set_level_for_user(conn, chat_id, 2)
                 set_url_for_user(conn, chat_id, message.text)
@@ -243,7 +244,6 @@ def telebothook1x():
                 set_level_for_user(conn, chat_id, 1)
             if calld == '/help':
                 bot.send_message(chat_id, telebot_vars['help_text'], reply_markup=keys_start, parse_mode='html')
-    
     finally:
         # Close the database connection
         if conn:
