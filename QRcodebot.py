@@ -61,12 +61,13 @@ def generate_qr_code_with_pdf(url, output_image_file, output_pdf_file, caption):
     qr_code_size = 6*inch  # Increase the size of the QR code
     c.drawImage(output_image_file, (width - qr_code_size) / 2, height - 8*inch, qr_code_size, qr_code_size)
     # who made it
+    caption = "Telegram: @qrcode_a4_Bot"
     c.setFont("DejaVuSans", 12)
-    c.drawString((width - caption_width) / 2, height - 10*inch, "Telegram: @qrcode_a4_Bot")
+    caption_width = c.stringWidth(caption, "DejaVuSans", 12)
+    c.drawString((width - caption_width) / 2, height - 10*inch, caption)
     # Save the PDF
     c.showPage()
     c.save()
-
 
 # start web service
 app = Flask(__name__)
