@@ -7,6 +7,7 @@ import json
 import time
 import telebot
 from telebot import types
+import pymysql
 #### BEGINNING ###
 # my path
 import os
