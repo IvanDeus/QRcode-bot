@@ -173,7 +173,7 @@ def telebothook1x():
             elif message.text == '/start2qr':
                 my_tuple = tuple(message.text.split(' '))
                 if len(my_tuple) > 2:
-                    bot.send_message(chat_id, "Generation QR code for...\n" + my_tuple[1] )
+                    bot.send_message(chat_id, telebot_vars['gen_text'] + my_tuple[1] )
                     caption = ' '.join(my_tuple[2:])  # Join all parts after the URL as the caption
                     generate_qr_code_with_pdf(my_tuple[1], "qrcode1.png", "qrcode1.pdf", caption)
                     with open(script_directory+'/static/qrcode1.pdf', 'rb') as pdf_file:
