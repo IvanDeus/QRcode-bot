@@ -127,7 +127,7 @@ def set_url_for_user(conn, chat_id, level):
     try:
         with conn.cursor() as cursor:
             # update user the record
-            update_query = f"UPDATE telebot_users SET url = {level} WHERE chat_id = '{chat_id}'"
+            update_query = f"UPDATE telebot_users SET url = '{level}' WHERE chat_id = '{chat_id}'"
             cursor.execute(update_query)
             conn.commit()
     except pymysql.Error as e:
