@@ -12,7 +12,6 @@ db_name = ""
 # MySQL socket path
 mysql_unix_socket = "/var/run/mysqld/mysqld.sock"
 #paths
-install_path = "/var/www"
 logfpath = "/var/log/QRbot_.log"
 # bot
 main_bot_token = "xxx"
