@@ -139,7 +139,7 @@ def get_level_for_user(conn, chat_id):
         result = None
         with conn.cursor() as cursor:
             # update user the record
-            s_query = f"SELECT level FROM telebot_users WHERE chat_id = '{chat_id_str}' limit 1"
+            s_query = f"SELECT level FROM telebot_users WHERE chat_id = '{chat_id}' limit 1"
             cursor.execute(s_query)
             result = cursor.fetchone()
             conn.commit()
