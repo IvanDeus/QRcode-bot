@@ -5,6 +5,7 @@
 This guide will walk you through setting up your Telegram bot, which generates an A4 PDF containing a QR code for your custom web link (URL) with a custom title (including Cyrillic characters).
 
 ## Requirements
+- VDS (Virtual dedicated server) or dedicated web server
 - Python 3.11
 - MySQL 8
 - A Telegram bot token (obtainable from [@BotFather](https://t.me/botfather))
