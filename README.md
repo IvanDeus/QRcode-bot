@@ -1,5 +1,5 @@
 # QRcode-bot
-### QR Code Generator (Telegram Bot)
+### QR Code Generator (Telegram Bot) by IvanDeus (2024)
 
 ## Introduction
 This guide will walk you through setting up your Telegram bot, which generates an A4 PDF containing a QR code for your custom web link (URL) with a custom title (including Cyrillic characters).
