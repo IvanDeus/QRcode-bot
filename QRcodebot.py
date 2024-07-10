@@ -220,13 +220,18 @@ def telebothook1x():
             # QR code generator
             elif user_level[0] == 2:
                 if len(user_level) > 2:
+                    file_to_make = script_directory+'/static/qrcode1'+chat_id
                     bot.send_message(chat_id, telebot_vars['gen_text'], parse_mode='html')
-                    generate_qr_code_with_pdf(user_level[2], "qrcode1.png", "qrcode1.pdf", user_level[1])
-                    with open(script_directory+'/static/qrcode1.pdf', 'rb') as pdf_file:
+                    generate_qr_code_with_pdf(user_level[2], "qrcode1"+chat_id+".png", "qrcode1"+chat_id+".pdf", user_level[1])
+                    with open(file_to_make+'.pdf', 'rb') as pdf_file:
                         bot.send_document(chat_id, pdf_file)
                     bot.send_message(chat_id, telebot_vars['gen_text_done'], reply_markup=keys_start, parse_mode='html' )
                 # reset user        
                 set_level_for_user(conn, chat_id, 0)
+                # remove tmp files
+                if os.path.exists(file_to_make+'.pdf'):
+                    os.remove(file_to_make+'.pdf')
+                    os.remove(file_to_make+'.png')
             else:
                 bot.send_message(chat_id, telebot_vars['welcome_nostart'], reply_markup=keys_start, parse_mode='html')
         # do call backs 
