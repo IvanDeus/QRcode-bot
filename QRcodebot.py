@@ -122,7 +122,18 @@ def add_or_update_user(chat_id, name, message, conn, first_name, last_name):
     except pymysql.Error as e:
         # Handle any database errors here
         print(f"Database error: {e}")
-
+#set user level to process queue        
+def set_level_for_user(conn, chat_id, level):
+    try:
+        with conn.cursor() as cursor:
+            # update user the record
+            update_query = f"UPDATE telebot_users SET level = {level} WHERE chat_id = '{chat_id}'"
+            cursor.execute(update_query)
+            conn.commit()
+    except pymysql.Error as e:
+        # Handle any database errors here
+        print(f"Database error: {e}")
+        
 # cunstruct keyboard sets for a user message
 def inline_button_constructor(my_tuple):
     my_tuple = tuple(my_tuple.split(', '))
@@ -169,9 +180,11 @@ def telebothook1x():
             if message.text == '/start':
                 #just send a start message
                 bot.send_message(chat_id, telebot_vars['welcome_message'], reply_markup=keys_start, parse_mode='html')
+                
             # get and store url     
-            elif calld.startswith("https"):
+            elif message.text.startswith("http"):
                 bot.send_message(chat_id, telebot_vars['titul_text'], reply_markup=keys_start, parse_mode='html')
+                
             #QR code generator
             elif message.text == '/start2qr':
                 my_tuple = tuple(message.text.split(' '))
@@ -183,12 +196,13 @@ def telebothook1x():
                         bot.send_document(chat_id, pdf_file)                  
             else:
                 bot.send_message(chat_id, telebot_vars['welcome_nostart'], reply_markup=keys_start, parse_mode='html')
-        # do call backs   
+        # do call backs 
         elif update.callback_query is not None:
             calld = update.callback_query.data
             chat_id = update.callback_query.message.chat.id
             if calld == '/qr':
-                bot.send_message(chat_id, telebot_vars['url_text'], reply_markup=keys_start, parse_mode='html')     
+                bot.send_message(chat_id, telebot_vars['url_text'], parse_mode='html')
+                set_level_for_user(conn, chat_id, 1)
     finally:
         # Close the database connection
         if conn:
