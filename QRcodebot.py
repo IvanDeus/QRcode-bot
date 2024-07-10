@@ -122,7 +122,17 @@ def add_or_update_user(chat_id, name, message, conn, first_name, last_name):
         # Handle any database errors here
         print(f"Database error: {e}")
 
-
+# cunstruct keyboard sets for a user message
+def inline_button_constructor(my_tuple):
+    tuple_len = len(my_tuple)
+    keys = types.InlineKeyboardMarkup()
+    buttons = []
+    for i in range(0, tuple_len, 2):
+        buttons.append(
+            types.InlineKeyboardButton(my_tuple[i], callback_data=my_tuple[i + 1])
+        )
+    keys.add(*buttons)
+    return keys
 
 ##########
 # Main bot logic
@@ -150,7 +160,7 @@ def telebothook1x():
                 last_name = ' '
             chat_id = message.chat.id
             # form buttons
-            keys_start = "(Gen QRcode, /qr, Help, /help)"
+            keys_start = inline_button_constructor(tuple(telebot_vars['qr'],telebot_vars['help']))
             # add user to database
             add_or_update_user(chat_id, name, message.text, conn, first_name, last_name)
             if message.text == '/start':
