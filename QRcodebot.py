@@ -217,11 +217,11 @@ def telebothook1x():
             # QR code generator
             elif user_level[0] == 2:
                 if len(user_level) > 2:
-                    bot.send_message(chat_id, telebot_vars['gen_text'] )
+                    bot.send_message(chat_id, telebot_vars['gen_text'], parse_mode='html')
                     generate_qr_code_with_pdf(user_level[2], "qrcode1.png", "qrcode1.pdf", user_level[1])
                     with open(script_directory+'/static/qrcode1.pdf', 'rb') as pdf_file:
                         bot.send_document(chat_id, pdf_file)
-                    bot.send_message(chat_id, telebot_vars['gen_text_done'] )
+                    bot.send_message(chat_id, telebot_vars['gen_text_done'], reply_markup=keys_start, parse_mode='html' )
                 # reset user        
                 set_level_for_user(conn, chat_id, 0)
             else:
