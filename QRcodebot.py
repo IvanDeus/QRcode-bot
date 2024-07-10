@@ -163,9 +163,9 @@ def telebothook1x():
             calld = update.callback_query.data
             chat_id = update.callback_query.message.chat.id
             if calld == '/qr':
-                bot.send_message(chat_id, telebot_vars['url'], reply_markup=keys_start, parse_mode='html')
+                bot.send_message(chat_id, telebot_vars['url_text'], reply_markup=keys_start, parse_mode='html')
             elif calld.startswith("https"):
-                bot.send_message(chat_id, telebot_vars['titul'], reply_markup=keys_start, parse_mode='html')
+                bot.send_message(chat_id, telebot_vars['titul_text'], reply_markup=keys_start, parse_mode='html')
     finally:
         # Close the database connection
         if conn:
