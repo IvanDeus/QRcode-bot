@@ -241,6 +241,9 @@ def telebothook1x():
             if calld == '/qr':
                 bot.send_message(chat_id, telebot_vars['url_text'], parse_mode='html')
                 set_level_for_user(conn, chat_id, 1)
+            if calld == '/help':
+                bot.send_message(chat_id, telebot_vars['help_text'], reply_markup=keys_start, parse_mode='html')
+    
     finally:
         # Close the database connection
         if conn:
