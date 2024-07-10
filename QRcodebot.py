@@ -161,7 +161,7 @@ def telebothook1x():
                 last_name = ' '
             chat_id = message.chat.id
             # form buttons
-            keys_start = inline_button_constructor(tuple(telebot_vars['qr'],telebot_vars['help']))
+            keys_start = inline_button_constructor(telebot_vars['qr'],telebot_vars['help'])
             # add user to database
             add_or_update_user(chat_id, name, message.text, conn, first_name, last_name)
             if message.text == '/start':
