@@ -21,7 +21,7 @@ This guide will walk you through setting up your Telegram bot, which generates a
    ```sh
    python bot_manage_webhook.py
    ```
-   (It is recommended to use Nginx for proxying bot traffic.)
+   (It is recommended to use Nginx for proxying bot traffic)
 5. **Start the Bot**: Execute the following command to run your bot:
    ```sh
    python run-my-bot.py start
