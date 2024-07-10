@@ -203,9 +203,8 @@ def telebothook1x():
                 set_level_for_user(conn, chat_id, 2)
             # check if URL and Titul is set     
             # QR code generator
-            elif user_level == 2:
-                my_tuple = tuple(message.text.split(' '))
-                if len(my_tuple) > 2:
+            elif user_level[0] == 2:
+                if len(user_level) > 2:
                     bot.send_message(chat_id, telebot_vars['gen_text'] + my_tuple[1] )
                     caption = ' '.join(my_tuple[2:])  # Join all parts after the URL as the caption
                     generate_qr_code_with_pdf(my_tuple[1], "qrcode1.png", "qrcode1.pdf", caption)
