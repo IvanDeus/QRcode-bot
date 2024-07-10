@@ -7,13 +7,12 @@ import time
 import telebot
 from telebot import types
 import pymysql
-#### BEGINNING ###
 # my path
 import os
 script_directory = os.path.dirname(os.path.abspath(__file__))
 # Config import
 from QRcodebot_cfg import *
-#QR import
+#QR / pdf libraries import
 import qrcode
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
@@ -72,7 +71,6 @@ def generate_qr_code_with_pdf(url, output_image_file, output_pdf_file, caption):
 app = Flask(__name__)
 UPLOAD_FOLDER = 'static'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-# ... Route Code begins
 conn = None
 # Create a database connection with Unix socket
 def connect_to_mysql():
