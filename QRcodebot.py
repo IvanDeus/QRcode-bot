@@ -125,6 +125,7 @@ def add_or_update_user(chat_id, name, message, conn, first_name, last_name):
 
 # cunstruct keyboard sets for a user message
 def inline_button_constructor(my_tuple):
+    my_tuple = tuple(my_tuple.split(', '))
     tuple_len = len(my_tuple)
     keys = types.InlineKeyboardMarkup()
     buttons = []
@@ -161,7 +162,7 @@ def telebothook1x():
                 last_name = ' '
             chat_id = message.chat.id
             # form buttons
-            keys_start = inline_button_constructor(telebot_vars['qr']+", "+telebot_vars['help'])
+            keys_start = inline_button_constructor(telebot_vars['qr']+", /qr, "+telebot_vars['help']+", /help")
             # add user to database
             add_or_update_user(chat_id, name, message.text, conn, first_name, last_name)
             if message.text == '/start':
