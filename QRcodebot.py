@@ -122,6 +122,17 @@ def add_or_update_user(chat_id, name, message, conn, first_name, last_name):
     except pymysql.Error as e:
         # Handle any database errors here
         print(f"Database error: {e}")
+#set user URL to process queue        
+def set_url_for_user(conn, chat_id, level):
+    try:
+        with conn.cursor() as cursor:
+            # update user the record
+            update_query = f"UPDATE telebot_users SET url = {level} WHERE chat_id = '{chat_id}'"
+            cursor.execute(update_query)
+            conn.commit()
+    except pymysql.Error as e:
+        # Handle any database errors here
+        print(f"Database error: {e}")        
 #set user level to process queue        
 def set_level_for_user(conn, chat_id, level):
     try:
@@ -201,6 +212,7 @@ def telebothook1x():
             elif message.text.startswith("http"):
                 bot.send_message(chat_id, telebot_vars['titul_text'], parse_mode='html')
                 set_level_for_user(conn, chat_id, 2)
+                set_url_for_user(conn, chat_id, message.text)
             # check if URL and Titul is set     
             # QR code generator
             elif user_level[0] == 2:
