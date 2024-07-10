@@ -201,16 +201,18 @@ def telebothook1x():
             elif message.text.startswith("http"):
                 bot.send_message(chat_id, telebot_vars['titul_text'], parse_mode='html')
                 set_level_for_user(conn, chat_id, 2)
-                
-            #QR code generator
-            elif message.text == '/start2qr':
+            # check if URL and Titul is set     
+            # QR code generator
+            elif user_level == 2:
                 my_tuple = tuple(message.text.split(' '))
                 if len(my_tuple) > 2:
                     bot.send_message(chat_id, telebot_vars['gen_text'] + my_tuple[1] )
                     caption = ' '.join(my_tuple[2:])  # Join all parts after the URL as the caption
                     generate_qr_code_with_pdf(my_tuple[1], "qrcode1.png", "qrcode1.pdf", caption)
                     with open(script_directory+'/static/qrcode1.pdf', 'rb') as pdf_file:
-                        bot.send_document(chat_id, pdf_file)                  
+                        bot.send_document(chat_id, pdf_file)
+                # reset user        
+                set_level_for_user(conn, chat_id, 0)
             else:
                 bot.send_message(chat_id, telebot_vars['welcome_nostart'], reply_markup=keys_start, parse_mode='html')
         # do call backs 
