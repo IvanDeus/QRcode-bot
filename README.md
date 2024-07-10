@@ -1,6 +1,3 @@
-Here’s the improved guide in markdown format:
-
-```markdown
 # QRcode-bot
 ### QR Code Generator (Telegram Bot)
 
