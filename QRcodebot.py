@@ -50,7 +50,6 @@ def generate_qr_code_with_pdf(url, output_image_file, output_pdf_file, caption):
     # Set up dimensions
     width, height = A4
     # Set caption font size and center alignment
-    #pdfmetrics.registerFont(TTFont('Helvetica Cyrillic', script_directory+'/static/'+'Helvetica Cyrillic.ttf'))
     pdfmetrics.registerFont(TTFont('DejaVuSans', script_directory+'/static/'+'DejaVuSans.ttf'))
     caption_font_size = 36
     c.setFont("DejaVuSans", caption_font_size)
@@ -61,6 +60,9 @@ def generate_qr_code_with_pdf(url, output_image_file, output_pdf_file, caption):
     # Add QR code image
     qr_code_size = 6*inch  # Increase the size of the QR code
     c.drawImage(output_image_file, (width - qr_code_size) / 2, height - 8*inch, qr_code_size, qr_code_size)
+    # who made it
+    c.setFont("DejaVuSans", 12)
+    c.drawString((width - caption_width) / 2, height - 10*inch, "Telegram: @qrcode_a4_Bot")
     # Save the PDF
     c.showPage()
     c.save()
