@@ -79,6 +79,22 @@ def connect_to_mysql():
     except pymysql.err.OperationalError as err:
         print(f"Error connecting to MySQL server: {err}")
         return None 
+# get text for buttons etc
+def fetch_telebot_vars_into_dict(conn):
+    try:
+        with conn.cursor() as cursor:
+            query = "SELECT param, value FROM telebot_vars"
+            cursor.execute(query)
+            result = cursor.fetchall()
+            telebot_vars = {}  # Initialize an empty dictionary
+            for row in result:
+                param, value = row
+                telebot_vars[param] = value  # Add data to the dictionary
+            return telebot_vars
+    except pymysql.Error as e:
+        # Handle any database errors here
+        print(f"Database error: {e}")
+        return {}
 # Function to add or update a user in the 'telebot_users' table
 def add_or_update_user(chat_id, name, message, conn, first_name, last_name):
     try:
@@ -114,6 +130,7 @@ def add_or_update_user(chat_id, name, message, conn, first_name, last_name):
 def telebothook1x():
     try:
         conn = connect_to_mysql()
+        telebot_vars = fetch_telebot_vars_into_dict(conn)
         #V2 Get update array
         json_string = request.get_data().decode('UTF-8')
         update = telebot.types.Update.de_json(json_string)
@@ -132,22 +149,23 @@ def telebothook1x():
             else:
                 last_name = ' '
             chat_id = message.chat.id
+            # form buttons
             keys_start = "(Gen QRcode, /qr, Help, /help)"
             # add user to database
             add_or_update_user(chat_id, name, message.text, conn, first_name, last_name)
             if message.text == '/start':
                 #just send a start message
-                bot.send_message(chat_id, "QR code generator", reply_markup=keys_start, parse_mode='html')
+                bot.send_message(chat_id, telebot_vars['welcome_message'], reply_markup=keys_start, parse_mode='html')
             else:
-                bot.send_message(chat_id, "Sorry, I don't understand", reply_markup=keys_start, parse_mode='html')
+                bot.send_message(chat_id, telebot_vars['welcome_nostart'], reply_markup=keys_start, parse_mode='html')
         # do call backs   
         elif update.callback_query is not None:
             calld = update.callback_query.data
             chat_id = update.callback_query.message.chat.id
             if calld == '/qr':
-                bot.send_message(chat_id, "Type URL", reply_markup=keys_start, parse_mode='html')
+                bot.send_message(chat_id, telebot_vars['url'], reply_markup=keys_start, parse_mode='html')
             elif calld.startswith("https"):
-                bot.send_message(chat_id, "Type title", reply_markup=keys_start, parse_mode='html')
+                bot.send_message(chat_id, telebot_vars['titul'], reply_markup=keys_start, parse_mode='html')
     finally:
         # Close the database connection
         if conn:
