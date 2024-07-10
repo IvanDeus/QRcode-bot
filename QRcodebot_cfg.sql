@@ -36,7 +36,7 @@ CREATE TABLE `telebot_users` (
   `level` smallint DEFAULT '0',
   `email` varchar(222) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `phone` varchar(33) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `u_url` varchar(500) COLLATE utf8mb3_unicode_ci NOT NULL
+  `u_url` varchar(500) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT '__'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 -- --------------------------------------------------------
