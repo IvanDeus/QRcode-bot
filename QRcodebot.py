@@ -143,6 +143,8 @@ def telebothook1x():
     try:
         conn = connect_to_mysql()
         telebot_vars = fetch_telebot_vars_into_dict(conn)
+        # form buttons
+        keys_start = inline_button_constructor(telebot_vars['qr']+", /qr, "+telebot_vars['help']+", /help")
         #V2 Get update array
         json_string = request.get_data().decode('UTF-8')
         update = telebot.types.Update.de_json(json_string)
@@ -161,8 +163,7 @@ def telebothook1x():
             else:
                 last_name = ' '
             chat_id = message.chat.id
-            # form buttons
-            keys_start = inline_button_constructor(telebot_vars['qr']+", /qr, "+telebot_vars['help']+", /help")
+
             # add user to database
             add_or_update_user(chat_id, name, message.text, conn, first_name, last_name)
             if message.text == '/start':
