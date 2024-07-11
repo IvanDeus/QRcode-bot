@@ -1,18 +1,13 @@
 -- phpMyAdmin SQL Dump
+-- version 4.9.5deb2
 -- https://www.phpmyadmin.net/
--- Server version: 8.0.37
--- PHP Version: 7.4.3
+-- Server version: 8.0
+-- PHP Version: 7.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `QRcodebot`
@@ -56,15 +51,15 @@ CREATE TABLE `telebot_vars` (
 --
 
 INSERT INTO `telebot_vars` (`id`, `param`, `value`) VALUES
-(3, 'welcome_message', 'Press the \'Get QR\' button to generate an A4 format PDF for your URL.'),
-(4, 'welcome_nostart', 'Sorry, I don\'t understand. Please ensure your prompt is correct and the title is not too long. Alternatively, press /start to restart the process.'),
-(5, 'url_text', 'Enter your URL:'),
-(6, 'titul_text', 'Enter document title:'),
+(3, 'welcome_message', 'Создайте QR-код на любой линк! \r\nПросто нажмите \'Get QR\' и введите свою ссылку.\r\n\r\nPress the \'Get QR\' button to generate an A4 format PDF for your URL.'),
+(4, 'welcome_nostart', 'Извините, не понимаю. Пожалуйста, убедитесь, что ссылка без кавычек и пробелов, и заголовок не слишком длинный. Либо нажмите /start, чтобы перезапустить процесс.\r\n\r\nSorry, I don\'t understand. Please ensure your prompt is correct and the title is not too long. Alternatively, press /start to restart the process.'),
+(5, 'url_text', 'Вставьте свою ссылку:\r\n\r\nEnter your URL:'),
+(6, 'titul_text', 'Напишите заголовок:\r\n\r\nEnter document title:'),
 (7, 'help', 'Help'),
 (8, 'qr', 'Get QR'),
-(9, 'gen_text', 'Generating QR code...'),
-(10, 'gen_text_done', 'Done! Would you like to generate another?'),
-(11, 'help_text', 'Instructions for creating a QR code: Ensure there are no empty spaces in your input. The URL should begin with http:// or https://. Both the title and URL can be in Cyrillic.');
+(9, 'gen_text', 'Генерирую... \r\n\r\nGenerating QR code...'),
+(10, 'gen_text_done', 'Готово! Ещё? Если нравится бот, <i>присылайте донаты на криптокошелёк Toncoin/Notcoin/USDT (TON):</i><b> UQAM8RmCrA5_R1Bw8uFJ0imW6OfupgGxvedbYoaIIdONZ447\r\n</b>\r\nDone! More? If you like this bot, <i>please donate  Toncoin/Notcoin/USDT (TON):</i><b> UQAM8RmCrA5_R1Bw8uFJ0imW6OfupgGxvedbYoaIIdONZ447\r\n</b>'),
+(11, 'help_text', 'Как создать QR-код в формате А4? Убедитесь, что при вводе ссылки нет пустых мест, пропусков, пробелов. Линк (cсылка, URL) должен начинаться с http:// или https://. И заголовок (может быть с пробелами), и URL-адрес могут быть написаны кириллицей.\r\n\r\nInstructions for creating a QR code: Ensure there are no empty spaces in your input. The URL should begin with http:// or https://. Both the title and URL can be in Cyrillic.');
 
 --
 -- Indexes for dumped tables
@@ -98,7 +93,3 @@ ALTER TABLE `telebot_users`
 ALTER TABLE `telebot_vars`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
