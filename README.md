@@ -29,3 +29,5 @@ This guide will walk you through setting up your Telegram bot, which generates a
    python run-my-bot.py start
    ```
 6. **Begin Usage**: Your bot is now ready to use!
+
+2025 [ivan deus]
