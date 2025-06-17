@@ -51,8 +51,8 @@ if action == "start":
         psutil.Popen(
         ["gunicorn",
          "-b", "localhost:{}".format(bot_lport),
-         "-w", "4",
-         "-t", "180",
+         "-w", "2",
+         "-t", "50",
          "--log-file={}".format(logfpath),
          "QRcodebot:app",
          "--chdir", script_directory]
